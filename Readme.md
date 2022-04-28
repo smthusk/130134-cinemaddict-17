@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Иван Климухин](https://up.htmlacademy.ru/ecmascript/17/user/130134).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Андреев](https://htmlacademy.ru/profile/id812127).
 
 ---
 
