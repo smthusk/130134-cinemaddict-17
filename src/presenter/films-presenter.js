@@ -7,7 +7,6 @@ import FilmsListCommentedView from '../view/films-list-commented-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import BtnMoreView from '../view/btn-more-view.js';
 
-
 export default class FilmsPresenter {
   filmsMainComponent = new FilmsMainView();
   filmsListComponent = new FilmsListView();
