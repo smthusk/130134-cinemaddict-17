@@ -1,10 +1,9 @@
 import {getRandomInteger, shuffleArray} from '../utils.js';
 import dayjs from 'dayjs';
 
-const generateComments = () => {
-  const commentsCount = getRandomInteger(0, 522);
-  const comments = () => commentsCount;
-  return commentsCount ? Array.from({length: commentsCount}, comments) : [];
+const generateCommentsId = () => {
+  const commentsCount = getRandomInteger(0, 15);
+  return commentsCount ? Array.from(Array(commentsCount).keys()) : [];
 };
 const generateTitle = () => {
   const titles = [
@@ -49,37 +48,40 @@ const generateDescription = () => {
   return shuffleArray(descriptions).slice(1, getRandomInteger(2, 6)).join('. ');
 };
 
-
 export const generateFilm = () => ({
-  "id": "0",
-  "comments": generateComments(),
-  "film_info": {
-    "title": generateTitle(),
-    "alternative_title": generateTitle(),
-    "total_rating": getRandomInteger(0, 10),
-    "poster": generatePoster(),
-    "age_rating": getRandomInteger(0, 18),
-    "director": "Tom Ford",
-    "writers": [
-      "Takeshi Kitano"
+  'id': '0',
+  'comments': generateCommentsId(),
+  'film_info': {
+    'title': generateTitle(),
+    'alternative_title': generateTitle(),
+    'total_rating': getRandomInteger(0, 10),
+    'poster': generatePoster(),
+    'age_rating': getRandomInteger(0, 18),
+    'director': 'Tom Ford',
+    'writers': [
+      'Takeshi Kitano',
+      'Makoto Shinkai'
     ],
-    "actors": [
-      "Morgan Freeman"
+    'actors': [
+      'Morgan Freeman',
+      'Yura Borisov',
+      'Masha Andreeva'
     ],
-    "release": {
-      "date": generateDate(),
-      "release_country": "Finland"
+    'release': {
+      'date': generateDate(),
+      'release_country': 'Finland'
     },
-    "runtime": getRandomInteger(25, 160),
-    "genre": [
-      "Comedy"
+    'runtime': getRandomInteger(25, 160),
+    'genre': [
+      'Comedy',
+      'Action'
     ],
-    "description": generateDescription()
+    'description': generateDescription()
   },
-  "user_details": {
-    "watchlist": getRandomInteger(0, 1),
-    "already_watched": getRandomInteger(0, 1),
-    "watching_date": generateDate(),
-    "favorite": getRandomInteger(0, 1)
+  'user_details': {
+    'watchlist': getRandomInteger(0, 1),
+    'already_watched': getRandomInteger(0, 1),
+    'watching_date': generateDate(),
+    'favorite': getRandomInteger(0, 1)
   }
 });

@@ -6,13 +6,14 @@ import FilmsListRatedView from '../view/films-list-rated-view.js';
 import FilmsListCommentedView from '../view/films-list-commented-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import BtnMoreView from '../view/btn-more-view.js';
+import PopupView from '../view/popup-view.js';
+import CommentView from '../view/comment-view.js';
 
 export default class FilmsPresenter {
   filmsMainComponent = new FilmsMainView();
   filmsListComponent = new FilmsListView();
   filmsListRatedComponent = new FilmsListRatedView();
   filmsListCommentedComponent = new FilmsListCommentedView();
-
 
   init = (filmsContainer, filmsModel) => {
     this.filmsContainer = filmsContainer;
@@ -24,8 +25,8 @@ export default class FilmsPresenter {
     render(this.filmsMainComponent, this.filmsContainer);
     render(this.filmsListComponent, this.filmsMainComponent.getElement());
     const siteFilmsContainerElement = this.filmsListComponent.getElement().querySelector('.films-list__container');
-    for (const filmItem of this.filmsCards) {
-      render(new FilmCardView(filmItem), siteFilmsContainerElement);
+    for (let i = 0; i < 10; i++) {
+      render(new FilmCardView(this.filmsCards[i]), siteFilmsContainerElement);
     }
     render(new BtnMoreView(), this.filmsListComponent.getElement());
 
@@ -40,6 +41,19 @@ export default class FilmsPresenter {
     for (let i = 0; i < 2; i++) {
       render(new FilmCardView(this.filmsCards[i]), siteFilmsCommentedContainerElement);
     }
+  };
 
+  initPopup = (footerElement, filmsModel, commentsModel) => {
+    this.popupComponent = new PopupView(this.filmsCards[0], this.commentsCards);
+    this.filmsModel = filmsModel;
+    this.filmsCards = [...this.filmsModel.getFilms()];
+    this.commentsModel = commentsModel;
+    this.commentsCards = [...this.commentsModel.getComments()];
+
+    render(this.popupComponent, footerElement, 'afterend');
+    const siteCommentsContainerElement = this.popupComponent.getElement().querySelector('.film-details__comments-list');
+    for (const comment of this.commentsCards) {
+      render(new CommentView(comment), siteCommentsContainerElement);
+    }
   };
 }
