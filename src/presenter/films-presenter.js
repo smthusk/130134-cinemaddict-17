@@ -6,8 +6,8 @@ import FilmsListRatedView from '../view/films-list-rated-view.js';
 import FilmsListCommentedView from '../view/films-list-commented-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import BtnMoreView from '../view/btn-more-view.js';
+import FooterView from '../view/footer-view.js';
 import PopupView from '../view/popup-view.js';
-import CommentView from '../view/comment-view.js';
 
 export default class FilmsPresenter {
   filmsMainComponent = new FilmsMainView();
@@ -15,10 +15,13 @@ export default class FilmsPresenter {
   filmsListRatedComponent = new FilmsListRatedView();
   filmsListCommentedComponent = new FilmsListCommentedView();
 
-  init = (filmsContainer, filmsModel) => {
+  init = (filmsContainer, footerContainer, filmsModel, commentsModel) => {
     this.filmsContainer = filmsContainer;
     this.filmsModel = filmsModel;
     this.filmsCards = [...this.filmsModel.getFilms()];
+    this.commentsModel = commentsModel;
+    this.commentsCards = [...this.commentsModel.getComments()];
+    this.popupComponent = new PopupView(this.filmsCards[0], this.commentsCards);
 
     render(new SortView(), this.filmsContainer);
 
@@ -41,19 +44,9 @@ export default class FilmsPresenter {
     for (let i = 0; i < 2; i++) {
       render(new FilmCardView(this.filmsCards[i]), siteFilmsCommentedContainerElement);
     }
-  };
 
-  initPopup = (footerElement, filmsModel, commentsModel) => {
-    this.popupComponent = new PopupView(this.filmsCards[0], this.commentsCards);
-    this.filmsModel = filmsModel;
-    this.filmsCards = [...this.filmsModel.getFilms()];
-    this.commentsModel = commentsModel;
-    this.commentsCards = [...this.commentsModel.getComments()];
+    render(new FooterView(this.filmsCards), footerContainer);
 
-    render(this.popupComponent, footerElement, 'afterend');
-    const siteCommentsContainerElement = this.popupComponent.getElement().querySelector('.film-details__comments-list');
-    for (const comment of this.commentsCards) {
-      render(new CommentView(comment), siteCommentsContainerElement);
-    }
+    render(this.popupComponent, footerContainer, 'afterend');
   };
 }

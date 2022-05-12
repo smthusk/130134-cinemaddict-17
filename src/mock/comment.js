@@ -37,8 +37,10 @@ const generateDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
+let id = 0;
+
 export const generateComment = () => ({
-  'id': getRandomInteger(0, 15),
+  'id': id++,
   'author': generateAuthor(),
   'comment': generateDescription(),
   'date': generateDate(),

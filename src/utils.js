@@ -6,20 +6,14 @@ const getRandomInteger = (a = 0, b = 1) => {
 };
 
 const shuffleArray = (arr) => {
-  const myArr = arr.slice();
-  // for (let i = 0; i < myArr.length; i++) {
-  //   const randomIndex = getRandomInteger(1, myArr.length - 1);
-  //   const curr = myArr[i];
-  //   myArr[i] = myArr[randomIndex];
-  //   myArr[randomIndex] = curr;
-  // }
-  for (let it of myArr) {
-    const randomIndex = getRandomInteger(1, myArr.length - 1);
+  const shuffledArray = arr.slice();
+  for (let it of shuffledArray) {
+    const randomIndex = getRandomInteger(1, shuffledArray.length - 1);
     const curr = it;
-    it = myArr[randomIndex];
-    myArr[randomIndex] = curr;
+    it = shuffledArray[randomIndex];
+    shuffledArray[randomIndex] = curr;
   }
-  return myArr;
+  return shuffledArray;
 };
 
 export {getRandomInteger, shuffleArray};

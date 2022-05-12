@@ -48,15 +48,16 @@ const generateDescription = () => {
   return shuffleArray(descriptions).slice(1, getRandomInteger(2, 6)).join('. ');
 };
 
+let id = 0;
 export const generateFilm = () => ({
-  'id': '0',
+  'id': id++,
   'comments': generateCommentsId(),
-  'film_info': {
+  'filmInfo': {
     'title': generateTitle(),
-    'alternative_title': generateTitle(),
-    'total_rating': getRandomInteger(0, 10),
+    'alternativeTitle': generateTitle(),
+    'totalRating': getRandomInteger(0, 10),
     'poster': generatePoster(),
-    'age_rating': getRandomInteger(0, 18),
+    'ageRating': getRandomInteger(0, 18),
     'director': 'Tom Ford',
     'writers': [
       'Takeshi Kitano',
@@ -69,7 +70,7 @@ export const generateFilm = () => ({
     ],
     'release': {
       'date': generateDate(),
-      'release_country': 'Finland'
+      'releaseCountry': 'Finland'
     },
     'runtime': getRandomInteger(25, 160),
     'genre': [
@@ -78,10 +79,10 @@ export const generateFilm = () => ({
     ],
     'description': generateDescription()
   },
-  'user_details': {
+  'userDetails': {
     'watchlist': getRandomInteger(0, 1),
-    'already_watched': getRandomInteger(0, 1),
-    'watching_date': generateDate(),
+    'alreadyWatched': getRandomInteger(0, 1),
+    'watchingDate': generateDate(),
     'favorite': getRandomInteger(0, 1)
   }
 });
