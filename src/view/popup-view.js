@@ -5,7 +5,7 @@ import {humanizeFilmDuration} from '../utils.js';
 const humanaizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/D H:MM');
 
 const createCommentTemplate = (commentsIdList, comments) => {
-  if (commentsIdList && commentsIdList.length) {
+  if (commentsIdList?.length) {
     return commentsIdList
       .map((commentId) => comments.find((comment) => comment.id === commentId))
       .map((commentElement) => (`<li class="film-details__comment">
