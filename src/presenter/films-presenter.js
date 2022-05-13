@@ -1,4 +1,4 @@
-import {render} from '../render.js';
+import {render, RenderPosition} from '../render.js';
 import SortView from '../view/sort-view.js';
 import FilmsMainView from '../view/films-main-view.js';
 import FilmsListView from '../view/films-list-view.js';
@@ -28,8 +28,8 @@ export default class FilmsPresenter {
     render(this.filmsMainComponent, this.filmsContainer);
     render(this.filmsListComponent, this.filmsMainComponent.getElement());
     const siteFilmsContainerElement = this.filmsListComponent.getElement().querySelector('.films-list__container');
-    for (let i = 0; i < 10; i++) {
-      render(new FilmCardView(this.filmsCards[i]), siteFilmsContainerElement);
+    for (const film of this.filmsCards) {
+      render(new FilmCardView(film), siteFilmsContainerElement);
     }
     render(new BtnMoreView(), this.filmsListComponent.getElement());
 
@@ -47,6 +47,6 @@ export default class FilmsPresenter {
 
     render(new FooterView(this.filmsCards), footerContainer);
 
-    render(this.popupComponent, footerContainer, 'afterend');
+    render(this.popupComponent, footerContainer, RenderPosition.AFTEREND);
   };
 }

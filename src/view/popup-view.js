@@ -1,40 +1,31 @@
 import {createElement} from '../render.js';
 import dayjs from 'dayjs';
+import {humanizeFilmDuration} from '../utils.js';
 
 const humanaizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/D H:MM');
 
 const createCommentTemplate = (commentsIdList, comments) => {
   if (commentsIdList && commentsIdList.length) {
-    return commentsIdList.map((commentId) => {
-      for (const commentItem of comments) {
-        if (commentItem.id === commentId) {
-          return commentItem;
-        }
-      }
-    }).map((commentElement) => (`<li class="film-details__comment">
-    <span class="film-details__comment-emoji">
-      <img src="./images/emoji/${commentElement.emotion}.png" width="55" height="55" alt="emoji-${commentElement.emotion}">
-    </span>
-    <div>
-      <p class="film-details__comment-text">${commentElement.comment}</p>
-      <p class="film-details__comment-info">
-        <span class="film-details__comment-author">${commentElement.author}</span>
-        <span class="film-details__comment-day">${humanaizeCommentDate(commentElement.date)}</span>
-        <button class="film-details__comment-delete">Delete</button>
-      </p>
-    </div>
-  </li>`)).join('');
+    return commentsIdList
+      .map((commentId) => comments.find((comment) => comment.id === commentId))
+      .map((commentElement) => (`<li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="./images/emoji/${commentElement.emotion}.png" width="55" height="55" alt="emoji-${commentElement.emotion}">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${commentElement.comment}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${commentElement.author}</span>
+            <span class="film-details__comment-day">${humanaizeCommentDate(commentElement.date)}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>`)).join('');
   }
   return '';
 };
 
 const humanizeFilmReleaseDate = (dueDate) => dayjs(dueDate).format('DD MMMM YYYY');
-const humanizeFilmDuration = (runtime) => {
-  const hours = Math.floor(runtime / 60);
-  const minutes = runtime % 60;
-
-  return `${hours}h ${minutes}m`;
-};
 
 const createGenresTemplate = (genre) => genre.map((el) => `<span class="film-details__genre">${el}</span>`).join('');
 const getWriters = (writers) => writers.join(', ');

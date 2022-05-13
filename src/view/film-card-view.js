@@ -1,16 +1,12 @@
 import {createElement} from '../render.js';
 import dayjs from 'dayjs';
+import {humanizeFilmDuration} from '../utils.js';
 
 const createFilmCardTemplate = (film) => {
   const {filmInfo, comments, userDetails} = film;
 
   const humanizeFilmYear = (dueDate) => dayjs(dueDate).format('YYYY');
-  const humanizeFilmDuration = (runtime) => {
-    const hours = Math.floor(runtime / 60);
-    const minutes = runtime % 60;
 
-    return `${hours}h ${minutes}m`;
-  };
   const getGenres = (genre) => genre.join(', ');
   const getDescription = (description) => description.length > 140 ? `${description.slice(0, 139)} ...` : description;
 
