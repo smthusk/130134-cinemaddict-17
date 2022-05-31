@@ -22,6 +22,21 @@ export default class FilmsPresenter {
   #filmCardComponent = null;
   #popupComponent = null;
 
+  #popupClose = () => {
+    document.body.removeChild(this.#popupComponent.element);
+    this.#popupComponent.removeElement();
+    document.body.classList.remove('hide-overflow');
+  };
+
+  #popupCloseClickHandler = () => {
+    this.#popupClose();
+  };
+
+  #popupCloseEscHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      this.#popupClose();
+    }
+  };
 
   init = (filmsContainer, footerContainer, filmsModel, commentsModel) => {
     this.#filmsContainer = filmsContainer;
@@ -29,19 +44,6 @@ export default class FilmsPresenter {
     this.#filmsCards = [...this.#filmsModel.films];
     this.#commentsModel = commentsModel;
     this.#commentsCards = [...this.#commentsModel.comments];
-
-    const popupCloseClickHandler = () => {
-      document.body.removeChild(this.#popupComponent.element);
-      this.#popupComponent.removeElement();
-      document.body.classList.remove('hide-overflow');
-    };
-    const popupCloseEscHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        document.body.removeChild(this.#popupComponent.element);
-        this.#popupComponent.removeElement();
-        document.body.classList.remove('hide-overflow');
-      }
-    };
 
     render(new SortView(), this.#filmsContainer);
 
@@ -53,8 +55,8 @@ export default class FilmsPresenter {
       this.#filmCardComponent = new FilmCardView(film);
       this.#filmCardComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
         this.#popupComponent = new PopupView(film, this.#commentsCards);
-        this.#popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', popupCloseClickHandler);
-        document.body.addEventListener('keydown', popupCloseEscHandler);
+        this.#popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', this.#popupCloseClickHandler);
+        document.body.addEventListener('keydown', this.#popupCloseEscHandler);
         render(this.#popupComponent, footerContainer, RenderPosition.AFTEREND);
         document.body.classList.add('hide-overflow');
       });
@@ -75,7 +77,5 @@ export default class FilmsPresenter {
     }
 
     render(new FooterView(this.#filmsCards), footerContainer);
-
-    // render(this.#popupComponent, footerContainer, RenderPosition.AFTEREND);
   };
 }
