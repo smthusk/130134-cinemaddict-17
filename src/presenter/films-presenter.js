@@ -19,7 +19,9 @@ export default class FilmsPresenter {
   #filmsCards = null;
   #commentsModel = null;
   #commentsCards = null;
+  #filmCardComponent = null;
   #popupComponent = null;
+
 
   init = (filmsContainer, footerContainer, filmsModel, commentsModel) => {
     this.#filmsContainer = filmsContainer;
@@ -27,15 +29,36 @@ export default class FilmsPresenter {
     this.#filmsCards = [...this.#filmsModel.films];
     this.#commentsModel = commentsModel;
     this.#commentsCards = [...this.#commentsModel.comments];
-    this.#popupComponent = new PopupView(this.#filmsCards[0], this.#commentsCards);
+
+    const popupCloseClickHandler = () => {
+      document.body.removeChild(this.#popupComponent.element);
+      this.#popupComponent.removeElement();
+      document.body.classList.remove('hide-overflow');
+    };
+    const popupCloseEscHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        document.body.removeChild(this.#popupComponent.element);
+        this.#popupComponent.removeElement();
+        document.body.classList.remove('hide-overflow');
+      }
+    };
 
     render(new SortView(), this.#filmsContainer);
 
     render(this.#filmsMainComponent, this.#filmsContainer);
     render(this.#filmsListComponent, this.#filmsMainComponent.element);
     const siteFilmsContainerElement = this.#filmsListComponent.element.querySelector('.films-list__container');
+
     for (const film of this.#filmsCards) {
-      render(new FilmCardView(film), siteFilmsContainerElement);
+      this.#filmCardComponent = new FilmCardView(film);
+      this.#filmCardComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
+        this.#popupComponent = new PopupView(film, this.#commentsCards);
+        this.#popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', popupCloseClickHandler);
+        document.body.addEventListener('keydown', popupCloseEscHandler);
+        render(this.#popupComponent, footerContainer, RenderPosition.AFTEREND);
+        document.body.classList.add('hide-overflow');
+      });
+      render(this.#filmCardComponent, siteFilmsContainerElement);
     }
     render(new BtnMoreView(), this.#filmsListComponent.element);
 
@@ -53,6 +76,6 @@ export default class FilmsPresenter {
 
     render(new FooterView(this.#filmsCards), footerContainer);
 
-    render(this.#popupComponent, footerContainer, RenderPosition.AFTEREND);
+    // render(this.#popupComponent, footerContainer, RenderPosition.AFTEREND);
   };
 }
