@@ -5,14 +5,15 @@ import FilmsPresenter from './presenter/films-presenter.js';
 import FilmsModel from './model/films-model.js';
 import CommentsModel from './model/comments-model.js';
 
+const filmsModel = new FilmsModel();
+const commentsModel = new CommentsModel();
+
 const siteHeaderElement = document.querySelector('.header');
 const siteFooterElement = document.querySelector('.footer');
 const siteMainElement = document.querySelector('.main');
-const filmsPresenter = new FilmsPresenter();
-const filmsModel = new FilmsModel();
-const commentsModel = new CommentsModel();
+const filmsPresenter = new FilmsPresenter(siteMainElement, siteFooterElement, filmsModel, commentsModel);
 
 render(new RankView(), siteHeaderElement);
 render(new FilterView(), siteMainElement);
 
-filmsPresenter.init(siteMainElement, siteFooterElement, filmsModel, commentsModel);
+filmsPresenter.init();
