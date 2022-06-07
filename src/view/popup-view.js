@@ -1,8 +1,5 @@
-import {createElement} from '../render.js';
-import dayjs from 'dayjs';
-import {humanizeFilmDuration} from '../utils.js';
-
-const humanaizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/D H:MM');
+import AbstractView from '../framework/view/abstract-view.js';
+import {humanizeFilmDuration, humanizeCommentDate, humanizeFilmReleaseDate} from '../utils/film.js';
 
 const createCommentTemplate = (commentsIdList, comments) => {
   if (commentsIdList?.length) {
@@ -16,7 +13,7 @@ const createCommentTemplate = (commentsIdList, comments) => {
           <p class="film-details__comment-text">${commentElement.comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${commentElement.author}</span>
-            <span class="film-details__comment-day">${humanaizeCommentDate(commentElement.date)}</span>
+            <span class="film-details__comment-day">${humanizeCommentDate(commentElement.date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -24,8 +21,6 @@ const createCommentTemplate = (commentsIdList, comments) => {
   }
   return '';
 };
-
-const humanizeFilmReleaseDate = (dueDate) => dayjs(dueDate).format('DD MMMM YYYY');
 
 const createGenresTemplate = (genre) => genre.map((el) => `<span class="film-details__genre">${el}</span>`).join('');
 const getWriters = (writers) => writers.join(', ');
@@ -144,12 +139,12 @@ const createPopupTemplate = (film, commentsList) => {
   </section>`;
 };
 
-export default class PopupView {
-  #element = null;
+export default class PopupView extends AbstractView {
   #film = null;
   #comments = null;
 
   constructor(film, comments) {
+    super();
     this.#film = film;
     this.#comments = comments;
   }
@@ -158,15 +153,17 @@ export default class PopupView {
     return createPopupTemplate(this.#film, this.#comments);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickHandler = (cb) => {
+    this._callback.click = cb;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#element;
-  }
+  removeClickHandler = () => {
+    this.element.querySelector('.film-details__close-btn').removeEventListener('click', this.#clickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click(this.#film);
+  };
 }

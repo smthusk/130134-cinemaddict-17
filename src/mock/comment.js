@@ -1,4 +1,4 @@
-import {getRandomInteger, shuffleArray} from '../utils.js';
+import {getRandomInteger, shuffleArray} from '../utils/common.js';
 import dayjs from 'dayjs';
 
 const generateAuthor = () => {

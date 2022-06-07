@@ -1,11 +1,8 @@
-import {createElement} from '../render.js';
-import dayjs from 'dayjs';
-import {humanizeFilmDuration} from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import {humanizeFilmDuration, humanizeFilmYear} from '../utils/film.js';
 
 const createFilmCardTemplate = (film) => {
   const {filmInfo, comments, userDetails} = film;
-
-  const humanizeFilmYear = (dueDate) => dayjs(dueDate).format('YYYY');
 
   const getGenres = (genre) => genre.join(', ');
   const getDescription = (description) => description.length > 140 ? `${description.slice(0, 139)} ...` : description;
@@ -31,11 +28,11 @@ const createFilmCardTemplate = (film) => {
   </article>`;
 };
 
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #film = null;
 
   constructor(film) {
+    super();
     this.#film = film;
   }
 
@@ -43,15 +40,17 @@ export default class FilmCardView {
     return createFilmCardTemplate(this.#film);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setClickHandler = (cb) => {
+    this._callback.click = cb;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#element;
-  }
+  removeClickHandler = () => {
+    this.element.querySelector('.film-card__link').removeEventListener('click', this.#clickHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click(this.#film);
+  };
 }
