@@ -1,11 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import dayjs from 'dayjs';
-import {humanizeFilmDuration} from '../utils.js';
+import {humanizeFilmDuration, humanizeFilmYear} from '../utils/film.js';
 
 const createFilmCardTemplate = (film) => {
   const {filmInfo, comments, userDetails} = film;
-
-  const humanizeFilmYear = (dueDate) => dayjs(dueDate).format('YYYY');
 
   const getGenres = (genre) => genre.join(', ');
   const getDescription = (description) => description.length > 140 ? `${description.slice(0, 139)} ...` : description;
@@ -42,4 +39,18 @@ export default class FilmCardView extends AbstractView {
   get template() {
     return createFilmCardTemplate(this.#film);
   }
+
+  setClickHandler = (cb) => {
+    this._callback.click = cb;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickHandler);
+  };
+
+  removeClickHandler = () => {
+    this.element.querySelector('.film-card__link').removeEventListener('click', this.#clickHandler);
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click(this.#film);
+  };
 }

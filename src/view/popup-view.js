@@ -1,8 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import dayjs from 'dayjs';
-import {humanizeFilmDuration} from '../utils.js';
-
-const humanaizeCommentDate = (dueDate) => dayjs(dueDate).format('YYYY/MM/D H:MM');
+import {humanizeFilmDuration, humanizeCommentDate, humanizeFilmReleaseDate} from '../utils/film.js';
 
 const createCommentTemplate = (commentsIdList, comments) => {
   if (commentsIdList?.length) {
@@ -16,7 +13,7 @@ const createCommentTemplate = (commentsIdList, comments) => {
           <p class="film-details__comment-text">${commentElement.comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${commentElement.author}</span>
-            <span class="film-details__comment-day">${humanaizeCommentDate(commentElement.date)}</span>
+            <span class="film-details__comment-day">${humanizeCommentDate(commentElement.date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -24,8 +21,6 @@ const createCommentTemplate = (commentsIdList, comments) => {
   }
   return '';
 };
-
-const humanizeFilmReleaseDate = (dueDate) => dayjs(dueDate).format('DD MMMM YYYY');
 
 const createGenresTemplate = (genre) => genre.map((el) => `<span class="film-details__genre">${el}</span>`).join('');
 const getWriters = (writers) => writers.join(', ');
@@ -157,4 +152,18 @@ export default class PopupView extends AbstractView {
   get template() {
     return createPopupTemplate(this.#film, this.#comments);
   }
+
+  setClickHandler = (cb) => {
+    this._callback.click = cb;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
+  };
+
+  removeClickHandler = () => {
+    this.element.querySelector('.film-details__close-btn').removeEventListener('click', this.#clickHandler);
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click(this.#film);
+  };
 }
