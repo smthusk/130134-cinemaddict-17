@@ -57,13 +57,13 @@ export default class FilmsPresenter {
     }
   };
 
-  #popupOpen (filmItem) {
+  #popupOpen = (filmItem) => {
     this.#popupComponent = new PopupView(filmItem, this.#commentsCards);
     this.#popupComponent.setClickHandler(this.#popupCloseClickHandler);
     document.body.addEventListener('keydown', this.#popupCloseEscHandler);
     render(this.#popupComponent, this.#footerContainer, RenderPosition.AFTEREND);
     document.body.classList.add('hide-overflow');
-  }
+  };
 
   #filmCardClickHandler = (filmItem) => {
     if (!this.#popupComponent) {
