@@ -1,8 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import {FilterType} from '../const.js';
 
 const createFilterItemTemplate = (filter, isChecked) => {
   const isActive = isChecked ? 'main-navigation__item--active' : '';
-  if (filter.name === 'All movies') {
+  if (filter.name === FilterType.ALL_MOVIES) {
     return (
       `<a href="#all" class="main-navigation__item ${isActive}">
         All movies
