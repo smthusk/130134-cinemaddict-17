@@ -92,9 +92,9 @@ const createPopupTemplate = (film, commentsList) => {
         </div>
 
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist  ${userDetails.watchlist ? 'film-card__controls-item--active' : ''}" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched  ${userDetails.alreadyWatched ? 'film-card__controls-item--active' : ''}" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite  ${userDetails.favorite ? 'film-card__controls-item--active' : ''}" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist  ${userDetails.watchlist ? 'film-details__control-button--active' : ''}" id="watchlist" name="watchlist">Add to watchlist</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched  ${userDetails.alreadyWatched ? 'film-details__control-button--active' : ''}" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite  ${userDetails.favorite ? 'film-details__control-button--active' : ''}" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
 
@@ -158,12 +158,38 @@ export default class PopupView extends AbstractView {
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
   };
 
-  removeClickHandler = () => {
-    this.element.querySelector('.film-details__close-btn').removeEventListener('click', this.#clickHandler);
-  };
-
   #clickHandler = (evt) => {
     evt.preventDefault();
     this._callback.click(this.#film);
+  };
+
+  setPopupWatchlistClickHandler = (cb) => {
+    this._callback.popupWatchlistClick = cb;
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#popupWatchlistClickHandler);
+  };
+
+  setPopupWatchedClickHandler = (cb) => {
+    this._callback.popupWatchedClick = cb;
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#popupWatchedClickHandler);
+  };
+
+  setPopupFavoriteClickHandler = (cb) => {
+    this._callback.popupFavoriteClick = cb;
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#popupFavoriteClickHandler);
+  };
+
+  #popupWatchlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.popupWatchlistClick();
+  };
+
+  #popupWatchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.popupWatchedClick();
+  };
+
+  #popupFavoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.popupFavoriteClick();
   };
 }

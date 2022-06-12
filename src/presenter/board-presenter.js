@@ -10,9 +10,12 @@ import FooterView from '../view/footer-view.js';
 import NoFilmsView from '../view/no-films-view.js';
 import FilmPresenter from './film-presenter.js';
 
+import {updateItem} from '../utils/common.js';
+
 const FILMS_COUNT_PER_STEP = 5;
 export default class BoardsPresenter {
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
+  #filmPresenter = new Map();
 
   #filmsContainer = null;
   #filmsModel = null;
@@ -46,6 +49,15 @@ export default class BoardsPresenter {
     this.#filmsBoard();
   };
 
+  #popupChangeHandler = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.resetView());
+  };
+
+  #filmChangeHandler = (updatedFilm) => {
+    this.#filmsCards = updateItem(this.#filmsCards, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  };
+
   #btnMoreClickHandler = () => {
     this.#renderFilms(this.#renderedFilmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP);
 
@@ -57,8 +69,9 @@ export default class BoardsPresenter {
   };
 
   #renderFilm = (film, filmsContainer) => {
-    const filmPresenter = new FilmPresenter(filmsContainer, this.#footerContainer, this.#commentsCards);
+    const filmPresenter = new FilmPresenter(filmsContainer, this.#footerContainer, this.#commentsCards, this.#filmChangeHandler, this.#popupChangeHandler);
     filmPresenter.init(film);
+    this.#filmPresenter.set(film.id, filmPresenter);
   };
 
   #renderSort = () => {
@@ -96,6 +109,13 @@ export default class BoardsPresenter {
     this.#filmsCards
       .slice(from, to)
       .forEach((film) => this.#renderFilm(film, this.#siteFilmsContainer));
+  };
+
+  #clearFilmsList = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
+    remove(this.#btnMoreComponent);
   };
 
   #renderTopRated = () => {
