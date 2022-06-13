@@ -7,7 +7,7 @@ const Mode = {
   OPENED: 'OPENED',
 };
 
-export default class filmPresenter {
+export default class FilmPresenter {
   #filmsContainer = null;
   #footerContainer = null;
   #filmCardComponent = null;
@@ -15,15 +15,15 @@ export default class filmPresenter {
   #popupComponent = null;
   #changeData = null;
   #film = null;
-  #popupMode = null;
+  #popupChangeMode = null;
   #mode = Mode.CLOSED;
 
-  constructor (filmsContainer, footerContainer, commentsCards, changeData, popupMode) {
+  constructor (filmsContainer, footerContainer, commentsCards, changeData, popupChangeMode) {
     this.#filmsContainer = filmsContainer;
     this.#footerContainer = footerContainer;
     this.#commentsCards = commentsCards;
     this.#changeData = changeData;
-    this.#popupMode = popupMode;
+    this.#popupChangeMode = popupChangeMode;
   }
 
   #popupCloseClickHandler = () => {
@@ -57,7 +57,7 @@ export default class filmPresenter {
 
   #filmCardClickHandler = () => {
     if (this.#mode === Mode.CLOSED) {
-      this.#popupMode();
+      this.#popupChangeMode();
       this.#popupOpen();
     }
   };
