@@ -1,5 +1,6 @@
 import {getRandomInteger, shuffleArray} from '../utils/common.js';
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 
 const generateCommentsId = () => {
   const commentsCount = getRandomInteger(0, 15);
@@ -48,9 +49,8 @@ const generateDescription = () => {
   return shuffleArray(descriptions).slice(1, getRandomInteger(2, 6)).join('. ');
 };
 
-let id = 0;
 export const generateFilm = () => ({
-  'id': id++,
+  'id': nanoid(),
   'comments': generateCommentsId(),
   'filmInfo': {
     'title': generateTitle(),
