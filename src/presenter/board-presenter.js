@@ -11,11 +11,16 @@ import NoFilmsView from '../view/no-films-view.js';
 import FilmPresenter from './film-presenter.js';
 
 import {updateItem} from '../utils/common.js';
+import {sortByDate, sortByRating} from '../utils/film.js';
+import {SortType} from '../const.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 export default class BoardsPresenter {
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
   #filmPresenter = new Map();
+
+  #currentSortType = SortType.DEFAULT;
+  #sourcedBoardFilms = [];
 
   #filmsContainer = null;
   #filmsModel = null;
@@ -45,6 +50,7 @@ export default class BoardsPresenter {
   init = () => {
     this.#filmsCards = [...this.#filmsModel.films];
     this.#commentsCards = [...this.#commentsModel.comments];
+    this.#sourcedBoardFilms = [...this.#filmsModel.films];
 
     this.#filmsBoard();
   };
@@ -55,6 +61,7 @@ export default class BoardsPresenter {
 
   #filmChangeHandler = (updatedFilm) => {
     this.#filmsCards = updateItem(this.#filmsCards, updatedFilm);
+    this.#sourcedBoardFilms = updateItem(this.#sourcedBoardFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   };
 
@@ -74,8 +81,33 @@ export default class BoardsPresenter {
     this.#filmPresenter.set(film.id, filmPresenter);
   };
 
+  #sortFilms = (sortType) => {
+    this.#currentSortType = sortType;
+    switch (sortType) {
+      case SortType.DATE:
+        this.#filmsCards.sort(sortByDate);
+        break;
+      case SortType.RATING:
+        this.#filmsCards.sort(sortByRating);
+        break;
+      default:
+        this.#filmsCards = [...this.#sourcedBoardFilms];
+    }
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortFilms(sortType);
+    this.#clearFilmsList();
+    this.#renderFilmsList();
+  };
+
   #renderSort = () => {
     render(this.#sortComponent, this.#filmsContainer);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderNoFilms = () => {
@@ -95,10 +127,12 @@ export default class BoardsPresenter {
     render(this.#filmsMainComponent, this.#filmsContainer);
   };
 
-  #renderFilmsList = () => {
+  #renderFilmsContainer = () => {
     render(this.#filmsListComponent, this.#filmsMainComponent.element);
     this.#siteFilmsContainer = this.#filmsListComponent.element.querySelector('.films-list__container');
+  };
 
+  #renderFilmsList = () => {
     this.#renderFilms(0, Math.min(this.#filmsCards.length, FILMS_COUNT_PER_STEP));
     if (this.#filmsCards.length > FILMS_COUNT_PER_STEP) {
       this.#renderBtnMore();
@@ -137,6 +171,7 @@ export default class BoardsPresenter {
   #filmsBoard = () => {
     if (this.#filmsCards.length === 0) {
       this.#renderFilmsMain();
+      this.#renderFilmsContainer();
       this.#renderFilmsList();
       this.#renderNoFilms();
       this.#renderFooter();
@@ -145,6 +180,7 @@ export default class BoardsPresenter {
 
     this.#renderSort();
     this.#renderFilmsMain();
+    this.#renderFilmsContainer();
     this.#renderFilmsList();
     this.#renderTopRated();
     this.#renderTopCommented();
