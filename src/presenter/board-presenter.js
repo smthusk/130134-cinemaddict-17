@@ -82,6 +82,7 @@ export default class BoardsPresenter {
   };
 
   #sortFilms = (sortType) => {
+    this.#currentSortType = sortType;
     switch (sortType) {
       case SortType.DATE:
         this.#filmsCards.sort(sortByDate);
@@ -92,8 +93,6 @@ export default class BoardsPresenter {
       default:
         this.#filmsCards = [...this.#sourcedBoardFilms];
     }
-
-    this.#currentSortType = sortType;
   };
 
   #handleSortTypeChange = (sortType) => {
