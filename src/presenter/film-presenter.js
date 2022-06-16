@@ -17,6 +17,7 @@ export default class FilmPresenter {
   #film = null;
   #popupChangeMode = null;
   #mode = Mode.CLOSED;
+  #scrollPos = null;
 
   constructor (filmsContainer, footerContainer, commentsCards, changeData, popupChangeMode) {
     this.#filmsContainer = filmsContainer;
@@ -29,6 +30,7 @@ export default class FilmPresenter {
   #popupCloseClickHandler = () => {
     this.#popupComponent.reset(this.#film);
     this.#popupClose();
+    this.#scrollPos = null;
   };
 
   #popupCloseEscHandler = (evt) => {
@@ -36,6 +38,7 @@ export default class FilmPresenter {
       this.#popupComponent.reset(this.#film);
       this.#popupClose();
       document.body.removeEventListener('keydown', this.#popupCloseEscHandler);
+      this.#scrollPos = null;
     }
   };
 
@@ -46,7 +49,7 @@ export default class FilmPresenter {
   };
 
   #popupOpen = () => {
-    this.#popupComponent.setCloseClickHandler(this.#popupCloseClickHandler);
+    this.#popupComponent.setCloseBtnClickHandler(this.#popupCloseClickHandler);
     this.#popupComponent.setPopupWatchlistClickHandler(this.#watchlistClickHandler);
     this.#popupComponent.setPopupWatchedClickHandler(this.#watchedClickHandler);
     this.#popupComponent.setPopupFavoriteClickHandler(this.#favoriteClickHandler);
@@ -55,11 +58,13 @@ export default class FilmPresenter {
     render(this.#popupComponent, this.#footerContainer, RenderPosition.AFTEREND);
     document.body.classList.add('hide-overflow');
     this.#mode = Mode.OPENED;
+    this.#popupComponent.element.scrollTop = this.#scrollPos;
   };
 
   #filmCardClickHandler = () => {
     if (this.#mode === Mode.CLOSED) {
       this.#popupChangeMode();
+      this.#scrollPos = null;
       this.#popupOpen();
     }
   };
@@ -106,16 +111,19 @@ export default class FilmPresenter {
   };
 
   #watchlistClickHandler = () => {
+    this.#scrollPos = this.#popupComponent.element.scrollTop;
     this.#film.userDetails.watchlist = !this.#film.userDetails.watchlist;
     this.#changeData(this.#film);
   };
 
   #watchedClickHandler = () => {
+    this.#scrollPos = this.#popupComponent.element.scrollTop;
     this.#film.userDetails.alreadyWatched = !this.#film.userDetails.alreadyWatched;
     this.#changeData(this.#film);
   };
 
   #favoriteClickHandler = () => {
+    this.#scrollPos = this.#popupComponent.element.scrollTop;
     this.#film.userDetails.favorite = !this.#film.userDetails.favorite;
     this.#changeData(this.#film);
   };

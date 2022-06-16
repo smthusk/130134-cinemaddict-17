@@ -157,14 +157,14 @@ export default class PopupView extends AbstractStatefulView {
     return createPopupTemplate(this._state, this.#comments);
   }
 
-  setCloseClickHandler = (cb) => {
-    this._callback.closeClick = cb;
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeClickHandler);
+  setCloseBtnClickHandler = (cb) => {
+    this._callback.closeBtnClick = cb;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeBtnClickHandler);
   };
 
-  #closeClickHandler = (evt) => {
+  #closeBtnClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closeClick(this._state);
+    this._callback.closeBtnClick(this._state);
   };
 
   setPopupWatchlistClickHandler = (cb) => {
@@ -194,11 +194,7 @@ export default class PopupView extends AbstractStatefulView {
 
   #popupFavoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({
-      scrollPos: this.element.scrollTop,
-    });
     this._callback.popupFavoriteClick();
-    this.setScrollPosition();
   };
 
   setScrollPosition = () => {
@@ -227,7 +223,7 @@ export default class PopupView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
-    this.setCloseClickHandler(this._callback.click);
+    this.setCloseBtnClickHandler(this._callback.closeBtnClick);
     this.setPopupWatchlistClickHandler(this._callback.popupWatchlistClick);
     this.setPopupWatchedClickHandler(this._callback.popupWatchedClick);
     this.setPopupFavoriteClickHandler(this._callback.popupFavoriteClick);
