@@ -27,11 +27,13 @@ export default class FilmPresenter {
   }
 
   #popupCloseClickHandler = () => {
+    this.#popupComponent.reset(this.#film);
     this.#popupClose();
   };
 
   #popupCloseEscHandler = (evt) => {
     if (evt.key === 'Escape') {
+      this.#popupComponent.reset(this.#film);
       this.#popupClose();
       document.body.removeEventListener('keydown', this.#popupCloseEscHandler);
     }
@@ -44,7 +46,7 @@ export default class FilmPresenter {
   };
 
   #popupOpen = () => {
-    this.#popupComponent.setClickHandler(this.#popupCloseClickHandler);
+    this.#popupComponent.setCloseClickHandler(this.#popupCloseClickHandler);
     this.#popupComponent.setPopupWatchlistClickHandler(this.#watchlistClickHandler);
     this.#popupComponent.setPopupWatchedClickHandler(this.#watchedClickHandler);
     this.#popupComponent.setPopupFavoriteClickHandler(this.#favoriteClickHandler);
@@ -98,6 +100,7 @@ export default class FilmPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.CLOSED) {
+      this.#popupComponent.reset(this.#film);
       this.#popupClose();
     }
   };
