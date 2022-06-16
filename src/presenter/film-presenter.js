@@ -59,6 +59,7 @@ export default class FilmPresenter {
     document.body.classList.add('hide-overflow');
     this.#mode = Mode.OPENED;
     this.#popupComponent.element.scrollTop = this.#scrollPos;
+    this.#popupComponent.setInnerHandlers();
   };
 
   #filmCardClickHandler = () => {

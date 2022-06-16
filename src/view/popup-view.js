@@ -149,7 +149,7 @@ export default class PopupView extends AbstractStatefulView {
     this._state = PopupView.parsePopupToState(film);
     this.#comments = comments;
 
-    this.#setInnerHandlers();
+    this.setInnerHandlers();
 
   }
 
@@ -197,7 +197,7 @@ export default class PopupView extends AbstractStatefulView {
     this._callback.popupFavoriteClick();
   };
 
-  setScrollPosition = () => {
+  #setScrollPosition = () => {
     this.element.scrollTop = this._state.scrollPos;
   };
 
@@ -211,8 +211,12 @@ export default class PopupView extends AbstractStatefulView {
         scrollPos: this.element.scrollTop,
       });
       this.element.querySelector(`#${this._state.emojiId}`).checked = true;
-      this.setScrollPosition();
+      this.#setScrollPosition();
     }
+  };
+
+  setInnerHandlers = () => {
+    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#emojiClickHandler);
   };
 
   reset = (film) => {
@@ -222,15 +226,11 @@ export default class PopupView extends AbstractStatefulView {
   };
 
   _restoreHandlers = () => {
-    this.#setInnerHandlers();
+    this.setInnerHandlers();
     this.setCloseBtnClickHandler(this._callback.closeBtnClick);
     this.setPopupWatchlistClickHandler(this._callback.popupWatchlistClick);
     this.setPopupWatchedClickHandler(this._callback.popupWatchedClick);
     this.setPopupFavoriteClickHandler(this._callback.popupFavoriteClick);
-  };
-
-  #setInnerHandlers = () => {
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#emojiClickHandler);
   };
 
   static parsePopupToState = (film) => ({...film,
