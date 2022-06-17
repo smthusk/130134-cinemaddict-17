@@ -202,21 +202,16 @@ export default class PopupView extends AbstractStatefulView {
   };
 
   #emojiClickHandler = (evt) => {
-    if (evt.target.closest('.film-details__emoji-label')) {
-      evt.preventDefault();
-      const emojiId = evt.target.closest('.film-details__emoji-label').getAttribute('for');
-      this.updateElement({
-        emojiId,
-        emoji: emojiId.slice(6),
-        scrollPos: this.element.scrollTop,
-      });
-      this.element.querySelector(`#${this._state.emojiId}`).checked = true;
-      this.#setScrollPosition();
-    }
+    this.updateElement({
+      emoji: evt.target.value,
+      scrollPos: this.element.scrollTop,
+    });
+    this.element.querySelector(`#${evt.target.id}`).checked = true;
+    this.#setScrollPosition();
   };
 
   setInnerHandlers = () => {
-    this.element.querySelector('.film-details__emoji-list').addEventListener('click', this.#emojiClickHandler);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiClickHandler);
   };
 
   reset = (film) => {
