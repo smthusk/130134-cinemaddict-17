@@ -141,7 +141,6 @@ const createPopupTemplate = (film, commentsList) => {
 };
 
 export default class PopupView extends AbstractStatefulView {
-
   #comments = null;
 
   constructor(film, comments) {
